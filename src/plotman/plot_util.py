@@ -16,7 +16,7 @@ def df_b(d: str) -> int:
     return usage.free
 
 
-def is_valid_plot_dst(d, sched_cfg, all_jobs):
+def is_valid_plot_dst(d, sched_cfg, all_jobs, k):
     if sched_cfg.stop_when_dst_full:
         space = df_b(d)
         # Subtract space for current jobs which will be moved to the dir
@@ -24,14 +24,14 @@ def is_valid_plot_dst(d, sched_cfg, all_jobs):
         #       job is in phase 4 since the plot is partially moved to dst,
         #       once phase 4 is complete a new plot will eventually kick off
         jobs_to_dstdir = job.job_phases_for_dstdir(d, all_jobs)
-        space -= len(jobs_to_dstdir) * get_k32_plotsize()
-        return enough_space_for_k32(space)
+        space -= len(jobs_to_dstdir) * get_plotsize(k)
+        return enough_space_for_k(space)
     return True
 
 
-def enough_space_for_k32(b):
-    "Determine if there is enough space for a k32 given a number of free bytes"
-    return b > 1.2 * get_k32_plotsize()
+def enough_space_for_k(b, k):
+    "Determine if there is enough space for a plot given a number of free bytes"
+    return b > 1.2 * get_plotsize(k)
 
 
 def get_plotsize(k: int) -> int:
