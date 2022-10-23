@@ -25,7 +25,7 @@ def is_valid_plot_dst(d, sched_cfg, all_jobs, k):
         #       once phase 4 is complete a new plot will eventually kick off
         jobs_to_dstdir = job.job_phases_for_dstdir(d, all_jobs)
         space -= len(jobs_to_dstdir) * get_plotsize(k)
-        return enough_space_for_k(space)
+        return enough_space_for_k(space, k)
     return True
 
 
