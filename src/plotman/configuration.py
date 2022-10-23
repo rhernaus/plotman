@@ -18,10 +18,10 @@ import marshmallow.validate
 import pendulum
 import yaml
 
-from plotman import resources as plotman_resources
 import plotman.plotters.bladebit
 import plotman.plotters.chianetwork
 import plotman.plotters.madmax
+from plotman import resources as plotman_resources
 
 
 class ConfigurationException(Exception):
@@ -386,6 +386,7 @@ class Scheduling:
     tmpdir_stagger_phase_limit: int = (
         1  # If not explicit, "tmpdir_stagger_phase_limit" will default to 1
     )
+    stop_when_dst_full: bool = False
     tmp_overrides: Optional[Dict[str, TmpOverrides]] = None
 
 

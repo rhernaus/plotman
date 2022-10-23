@@ -12,15 +12,16 @@ from datetime import datetime
 import pendulum
 import psutil
 
-# Plotman libraries
-from plotman import (
-    archive,
-)  # for get_archdir_freebytes(). TODO: move to avoid import loop
-from plotman import job, plot_util
 import plotman.configuration
 import plotman.plotters.chianetwork
 import plotman.plotters.madmax
 
+# Plotman libraries
+from plotman import (  # for get_archdir_freebytes(). TODO: move to avoid import loop
+    archive,
+    job,
+    plot_util,
+)
 
 # Constants
 MIN = 60  # Seconds
@@ -144,8 +145,21 @@ def maybe_start_new_plot(
             (d, phases[0]) if phases else (d, job.Phase(known=False))
             for (d, phases) in eligible
         ]
+        dir2ph = {
+            d: ph
+            for (d, ph) in dstdirs_to_youngest_phase(jobs).items()
+            if (d in dir_cfg.dst and plot_util.is_valid_plot_dst(d, sched_cfg, jobs))
+        }
+        unused_dirs = [
+            d
+            for d in dir_cfg.dst
+            if d not in dir2ph.keys()
+            and plot_util.is_valid_plot_dst(d, sched_cfg, jobs)
+        ]
 
-        if not eligible:
+        if not unused_dirs and not dir2ph:
+            wait_reason = "no eligible dstdirs"
+        elif not eligible:
             wait_reason = "no eligible tempdirs (%ds/%ds)" % (
                 youngest_job_age,
                 global_stagger,
