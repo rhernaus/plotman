@@ -31,7 +31,7 @@ def is_valid_plot_dst(d, sched_cfg, all_jobs, k):
 
 def enough_space_for_k(b, k):
     "Determine if there is enough space for a plot given a number of free bytes"
-    return b > 1.2 * get_plotsize(k)
+    return b > 3.2 * get_plotsize(k)
 
 
 def get_plotsize(k: int) -> int:
